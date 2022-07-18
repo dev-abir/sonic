@@ -1,0 +1,34 @@
+
+{
+    "url": "http://127.0.0.1:8000/api/tests/1/",
+    "question_set": [
+        {
+            "url": "http://127.0.0.1:8000/api/questions/1/",
+            "solution_set": [
+                "http://127.0.0.1:8000/api/solutions/1/"
+            ],
+            "testcase_set": [
+                {
+                    "url": "http://127.0.0.1:8000/api/test-cases/1/",
+                    "solutiontestcase_set": [
+                        "http://127.0.0.1:8000/api/solution-test-cases/1/"
+                    ],
+                    "input": "http://127.0.0.1:8000/media/aaaa_CpBpmBS.txt",
+                    "expected_output": "http://127.0.0.1:8000/media/aaaa_lK32ccP.txt",
+                    "score": 45,
+                    "public": false,
+                    "question": "http://127.0.0.1:8000/api/questions/1/"
+                }
+            ],
+            "question_text": "this is a question",
+            "author": "http://127.0.0.1:8000/api/users/1/",
+            "test": "http://127.0.0.1:8000/api/tests/1/"
+        }
+    ],
+    "start_time": "2022-05-26T10:00:00Z",
+    "end_time": "2022-05-26T12:00:00Z",
+    "name": "topla",
+    "registered_groups": [
+        "http://127.0.0.1:8000/api/groups/1/"
+    ]
+}
