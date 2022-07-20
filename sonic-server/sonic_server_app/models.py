@@ -15,8 +15,6 @@ import datetime
 
 class Group(models.Model):
     leader = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    # TODO: doesn't work
     extra_time = models.DurationField()
 
     # NOTE: only leader will have a passcode, user2 is a simple dummy user (for simplicity)
