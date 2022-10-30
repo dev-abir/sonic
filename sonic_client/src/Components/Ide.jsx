@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { Button, FormControl, InputLabel, Select, MenuItem, CircularProgress } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -23,13 +23,31 @@ const Ide = (props) => {
     const [language, setLanguage] = useState("c");
     const [theme, setTheme] = useState("vs-dark");
     const colorMode = useContext(ColorModeContext);
-    const [ideLangState, setIdeLangState] = useState(new Map(defaultIdeLangState));
+    const [ideLangState, setIdeLangState] = useState(defaultIdeLangState);
     const handleEditorChange = (value, event) =>
         setIdeLangState(new Map(ideLangState.set(language, value || "")));
     // loader.config({ paths: { vs: "/min/vs/loader.js" } });
 
     // change global theme according to the IDE theme
-    useEffect(() => colorMode.setColorMode(theme === "light"? "light":"dark"), [theme, colorMode]);
+    useEffect(
+        () => colorMode.setColorMode(theme === "light" ? "light" : "dark"),
+        [theme, colorMode]
+    );
+
+    // run only once on initial render
+    // check supported languages in the device
+    const supportedLanguagesChecked = useRef(false);
+    useEffect(() => {
+        if (!supportedLanguagesChecked.current) {
+            window.sonicAPI.getSettings().then((settings) => {
+                setIdeLangState(
+                    (ideLangState) =>
+                        new Map([...ideLangState].filter(([k, v]) => settings.languageSettings[k]))
+                );
+                supportedLanguagesChecked.current = true;
+            });
+        }
+    }, [ideLangState, setIdeLangState, supportedLanguagesChecked]);
 
     return (
         <div
@@ -65,11 +83,15 @@ const Ide = (props) => {
                             label="Language"
                             onChange={(e) => setLanguage(e.target.value)}
                         >
-                            <MenuItem value="c">C</MenuItem>
-                            <MenuItem value="cpp">C++</MenuItem>
-                            <MenuItem value="java">JAVA</MenuItem>
-                            <MenuItem value="python">Python3</MenuItem>
-                            <MenuItem value="javascript">Javascript</MenuItem>
+                            {ideLangState.has("c") && <MenuItem value="c">C</MenuItem>}
+                            {ideLangState.has("cpp") && <MenuItem value="cpp">C++</MenuItem>}
+                            {ideLangState.has("java") && <MenuItem value="java">JAVA</MenuItem>}
+                            {ideLangState.has("python") && (
+                                <MenuItem value="python">Python3</MenuItem>
+                            )}
+                            {ideLangState.has("javascript") && (
+                                <MenuItem value="javascript">Javascript</MenuItem>
+                            )}
                         </Select>
                     </FormControl>
 

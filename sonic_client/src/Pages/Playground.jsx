@@ -24,8 +24,8 @@ function Playground(props) {
 
     const runCompile = async (language, src) => {
         setCompiling(true);
-        console.log(await window.vroomAPI.saveProgram(src, language));
-        console.log(await window.vroomAPI.compileInterprete());
+        console.log(await window.sonicAPI.saveProgram(src, language));
+        console.log(await window.sonicAPI.compileInterprete(language));
         setCompiling(false);
     };
 

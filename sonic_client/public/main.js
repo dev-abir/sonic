@@ -35,14 +35,26 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+    const settings = require("./settings.json");
+    // TODO: terminate execution here...
+    if (!settings) {
+        throw new Error("please provide a settings.json file");
+        console.error("please provide a settings.json file");
+    }
+    // TODO: check settings.json file
+
+    ipcMain.handle("getSettings", async (_) => settings);
+
     ipcMain.handle("saveProgram", async (_, programString, language) => {
         try {
             // TODO: test this exception, redundant?
+            // TODO: add step in README to create a "workspace" folder
+            // TODO: add step in README to create a settings.json file
             if (!fileExtensions[language])
                 throw new Error("Fatal error fileExtensions[language] is undefined!");
 
             await util.promisify(fs.writeFile)(
-                `./workspace/test.${fileExtensions[language]}`,
+                `./workspace/Test.${fileExtensions[language]}`,
                 programString
             );
         } catch (err) {
@@ -50,18 +62,22 @@ app.whenReady().then(() => {
         }
     });
 
-    ipcMain.handle("compileInterprete", async () => {
+    ipcMain.handle("compileInterprete", async (_, language) => {
+        const compileInterpreteCommand =
+            settings.languageSettings[language].compileInterpreteCommand;
+        const runCommand = settings.languageSettings[language].runCommand;
+        const workspaceDirectoryPath = settings.workspaceDirectoryPath;
+
         // FIXME: doesn't (IMMEDIATELY?) kill the process if TLE
         try {
-            await execP("gcc --std=c11 -o ./workspace/test ./workspace/test.c", {
-            // await execP("g++ --std=c++17 -o ./workspace/test ./workspace/test.cpp", {
+            await execP(`cd ${workspaceDirectoryPath} && ${compileInterpreteCommand}`, {
                 timeout: 3000,
                 killSignal: "SIGKILL",
             });
             // TODO: ignore compilation output (warnings?)?
 
             return (
-                await execP('printf "1" | ./workspace/test', {
+                await execP(`cd ${workspaceDirectoryPath} && ${runCommand}`, {
                     timeout: 3000,
                     killSignal: "SIGKILL",
                 })

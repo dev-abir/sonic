@@ -1,7 +1,8 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("vroomAPI", {
+contextBridge.exposeInMainWorld("sonicAPI", {
+    getSettings: () => ipcRenderer.invoke("getSettings"),
     saveProgram: (programString, language) =>
         ipcRenderer.invoke("saveProgram", programString, language),
-    compileInterprete: () => ipcRenderer.invoke("compileInterprete"),
+    compileInterprete: (language) => ipcRenderer.invoke("compileInterprete", language),
 });

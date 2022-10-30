@@ -1,0 +1,22 @@
+{
+    "OS": "ubuntu",
+    "workspaceDirectoryPath": "./workspace",
+    "languageSettings": {
+        "cpp": {
+            "compileInterpreteCommand": "g++ --std=c++17 Test.cpp -o Test.cppout",
+            "runCommand": "./Test.cppout"
+        },
+        "c": {
+            "compileInterpreteCommand": "gcc --std=c11 Test.c -o Test.cout",
+            "runCommand": "./Test.cout"
+        },
+        "java": {
+            "compileInterpreteCommand": "javac Test.java",
+            "runCommand": "java Test"
+        },
+        "python": {
+            "compileInterpreteCommand": "python3 Test.py",
+            "runCommand": "python3 Test.py"
+        }
+    }
+}
